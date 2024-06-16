@@ -7,9 +7,9 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 export default function App() {
   return (
     <View className="flex-1 items-center justify-center bg-white">
-      <Text className= "text-2xl">Smart Unit!</Text>
+      <Text className= "text-2xl font-pbold">Smart Unit!</Text>
       <StatusBar style= "auto"/>
-      <Link href="/profile" style={{color: 'blue'}}>Go to Profile</Link>
+      <Link href="/home" style={{color: 'blue'}}>Go to Home</Link>
     </View>
    
   );
