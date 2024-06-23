@@ -12,7 +12,7 @@ const TabIcon = ({icon, color, name, focused}) =>{
                 tintColor={color}
                 className= "w-5 h-5"
             />
-            <Text className= {`${focused ? 'font-psemibold' :'font-pregular'}`}>
+            <Text className= {`${focused ? 'font-psemibold' :'font-pregular'} text-xs`} style={{color: color}}>
                 {name}
             </Text>
         </View>
@@ -24,7 +24,15 @@ const TabsLayout = () => {
     <>
         <Tabs
             screenOptions={{
-                tabBarShowLabel: false 
+                tabBarShowLabel: false, 
+                tabBarActiveTintColor: '#FFA001',
+                tabBarInactiveTintColor: '#CDCDE0',
+                tabBarStyle: {
+                    backgroundColor:'#161622',
+                    borderTopWidth: 1,
+                    borderTopColor: '#232533',
+                    height: 84,
+                }
             }}
         >
 
@@ -42,7 +50,22 @@ const TabsLayout = () => {
                         />
                     )
                 }}            
-            />    
+            />  
+                        <Tabs.Screen
+                name="recents"
+                options={{
+                    title: 'Recents',
+                    headerShown: false,
+                    tabBarIcon: ({color, focused }) => (
+                        <TabIcon
+                            icon={icons.bookmark}
+                            color={color}
+                            name="Recents"
+                            focused={focused}
+                        />
+                    )
+                }}            
+            />   
             <Tabs.Screen
                 name="monitor"
                 options={{
@@ -52,7 +75,7 @@ const TabsLayout = () => {
                         <TabIcon
                             icon={icons.eye}
                             color={color}
-                            name="Home"
+                            name="Monitor"
                             focused={focused}
                         />
                     )
@@ -67,27 +90,13 @@ const TabsLayout = () => {
                         <TabIcon
                             icon={icons.profile}
                             color={color}
-                            name="Home"
+                            name="Profile"
                             focused={focused}
                         />
                     )
                 }}            
             />  
-            <Tabs.Screen
-                name="recents"
-                options={{
-                    title: 'Recents',
-                    headerShown: false,
-                    tabBarIcon: ({color, focused }) => (
-                        <TabIcon
-                            icon={icons.}
-                            color={color}
-                            name="Home"
-                            focused={focused}
-                        />
-                    )
-                }}            
-            />  
+ 
         </Tabs>
     </>
   )
