@@ -23,8 +23,8 @@ const Home = () => {
           />
         </View>
       </View>
-    <ScrollView>
-  
+    <ScrollView className="min-h-[83vh]">
+      
         <View className=" p-10 px-3 justify-between ">
           <Image
             source={images.witch}
