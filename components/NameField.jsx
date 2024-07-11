@@ -7,7 +7,7 @@ import { Ionicons } from '@expo/vector-icons';
 const NameField = ({title, value,placeholder, handleChangeText,otherStyles, ...props }) => {
     const [showPassword, setshowPassword] = useState(false)
   return (
-      <View className= " border-2 border-red-500w-full h-16 px-4 bg-black-200 rounded-2xl focus:border-secondary items-center flex-row space-x-4">
+      <View className= " border-2  w-full h-16 px-4 bg-black-200 rounded-2xl focus:border-secondary items-center flex-row space-x-4">
         <TextInput
             className="flex-1 text-white font-pregular text-base mt-0.5"
             value={value}

@@ -9,8 +9,7 @@ import DataDisplay from '../../components/dataDisplay'
 import { images } from '../../constants'
 const Home = () => {
   return (
-    <SafeAreaView className="bg-primary">
-     
+    <SafeAreaView className="bg-primary flex-1">
       <View  className="px-3 flex-row justify-between">
         <View>
           <Text className="text-gray-100 font-pmedium text-sm">Welcome to</Text>
@@ -18,29 +17,33 @@ const Home = () => {
         </View>
         <View>
           <Image
-            source={images.logoSmall}
+            source={images.logoh}
             className="w-9 h-10"
             resizeMode='contain'
           />
         </View>
       </View>
- 
-      <View className=" flex-row">
-        <Image
-          source={images.switch}
-          className="w-9 h-10"
-          resizeMode='contain'
-        />
-        <NameField />
-      </View>
-      <View className=" flex-row">
-        <Image
-          source={images.switch}
-          className="w-14 h-10"
-         
-        />
-        <NameField />
-      </View>
+    <ScrollView>
+  
+        <View className=" p-10 px-3 justify-between ">
+          <Image
+            source={images.witch}
+            className="w-full h-full "
+            resizeMode='contain'
+
+          />
+          <NameField />
+        </View>
+        <View className=" p-10 px-3  justify-between  ">
+            <Image
+              source={images.witch}
+              className="w-full h-full"
+              resizeMode='contain'
+            />
+
+          <NameField />
+        </View>
+      </ScrollView>
     </SafeAreaView>
   )
 }
