@@ -22,7 +22,7 @@ export default function App() {
             resizeMode="contain"
           />
           <Image
-            source={images.cards}
+            source={images.wing}
             className="max-w-[380px] h-[300px]"
             resizeMode="contain"
           />
