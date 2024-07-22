@@ -1,11 +1,73 @@
-import { View, Text } from 'react-native'
-import React from 'react'
+import { View, Text, FlatList, Image, RefreshControl } from 'react-native'
+import React, {useState, useEffect} from 'react'
+import { SafeAreaView } from 'react-native-safe-area-context'
+import { images } from '../../constants'
+import SearchInput from '../../components/SearchInput'
+import EmptyState from '../../components/EmptyState'
+import MeasuredValues from '../../components/MeasuredValues'
+import { getAllMeasurements } from '../../lib/appwrite'
+import useAppwrite from '../../lib/UseAppwrite'
+
+
 
 const Recents = () => {
+  const {data: measurements, refetch } = useAppwrite(getAllMeasurements);
+
+  const [refreshing, setRefreshing] = useState(false)
+
+  const onRefresh = async() => {
+    setRefreshing(true);
+    await refetch();
+    //re call measurements see if new measurements are found 
+    setRefreshing(false);
+  }
+
+
   return (
-    <View>
-      <Text>Recents</Text>
-    </View>
+    <SafeAreaView className="bg-primary h-full">
+      <FlatList
+        data={measurements}
+        keyExtractor={(item) => item.$id}
+        renderItem={({item}) => (
+          <MeasuredValues value= {item} />
+        )}
+        ListHeaderComponent={() => (
+          <View className= "my-6 px-4 space-y-6"> 
+            <View className="justify-between items-start flex-row mb-6">
+              <View>
+                <Text className="font-pmedium text-sm text-gray-100">
+                  Welcome Back
+                </Text>
+                <Text className="text-2xl font-psemibold text-white">
+                  HomeSys
+                </Text>
+              </View>
+              <View className="mt-1.5">
+                <Image
+                  source= {images.logoh}
+                  className="w-9 h-10"
+                  resizeMode='contain'
+                />
+              </View>
+            </View>
+
+            <SearchInput />
+
+
+            <View className="text-gray-100 text-lg font-pregular mb-3">
+              <Text className="text-white font-pregular mb-3 text-lg"> Latest Readings </Text>
+            </View>
+          </View>
+        )}
+        ListEmptyComponent={() => (
+          <EmptyState
+            title="No Measurements Found."
+            subtitle="Check your device."
+          />
+        )}
+        refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh}/>}
+      />
+    </SafeAreaView>
   )
 }
 

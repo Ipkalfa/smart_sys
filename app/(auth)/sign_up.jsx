@@ -13,7 +13,7 @@ const signUp = () => {
     username: '',
     email:'',
     password:'',
-  })
+  });
 
   const [isSubmitting, setisSubmitting] = useState(false)
 

@@ -5,8 +5,12 @@ import { StatusBar } from 'expo-status-bar'
 import NameField from '../../components/NameField'
 import { Ionicons } from '@expo/vector-icons';
 
+
 import DataDisplay from '../../components/dataDisplay'
 import { images } from '../../constants'
+
+
+
 const Home = () => {
   return (
     <SafeAreaView className="bg-primary flex-1">
@@ -32,17 +36,14 @@ const Home = () => {
             resizeMode='contain'
 
           />
-          <View>
-            <getDevice/>
-          </View>
+          <NameField />
         </View>
         <View className=" p-10 px-3  justify-between  ">
-            <Image
-              source={images.witch}
-              className="w-full h-full"
-              resizeMode='contain'
-            />
-
+          <Image
+            source={images.witch}
+            className="w-full h-full"
+            resizeMode='contain'
+          />
           <NameField />
         </View>
       </ScrollView>
@@ -50,4 +51,4 @@ const Home = () => {
   )
 }
 
-export default Home;
+export default Home
