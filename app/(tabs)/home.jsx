@@ -32,7 +32,9 @@ const Home = () => {
             resizeMode='contain'
 
           />
-          <NameField />
+          <View>
+            <getDevice/>
+          </View>
         </View>
         <View className=" p-10 px-3  justify-between  ">
             <Image
