@@ -1,33 +1,68 @@
-// import React, { useState, useEffect } from 'react';
-// import { View, Text} from 'react-native';
-// import { databases } from '../lib/appwrite';
+import React, { useState, useEffect } from 'react';
+import { View, Text, Dimensions, ScrollView } from 'react-native';
+import { LineChart } from 'react-native-chart-kit';
+import { databases } from '../lib/appwrite';
 
 
-// const DataDisplay = () => {
-//   const [data, setData] = useState('Loading...');
+const screenWidth = Dimensions.get('window').width;
 
-//   const fetchData = async () => {
-//     try {
-//       const response = await databases.listDocuments('6678637e001d16c11cc2', '667866d0002045fd0375');
-//       setData(response.documents[0]?.data || 'No data found');
-//     } catch (error) {
-//       console.error(error);
-//       setData('Error fetching data');
-//     }
-//   };
+const DataDisplay = () => {
+  return (
+    <ScrollView >
+      <View>
+        {error ? (
+          <Text>{error}</Text>
+        ) : (
+          <>
+            <Text>Power and Energy over Time</Text>
+            <LineChart
+              data={{
+                labels: timestamps,
+                datasets: [
+                  {
+                    data: powerData,
+                    color: (opacity = 1) => rgba(255, 0, 0, {opacity}), // Red
+                    strokeWidth: 2,
+                    label: 'Power'
+                  },
+                  {
+                    data: energyData,
+                    color: (opacity = 1) => rgba(0, 0, 255, {opacity}), // Blue
+                    strokeWidth: 2,
+                    label: 'Energy'
+                  }
+                ],
+                legend: ["Power", "Energy"]
+              }}
+              width={screenWidth - 16} // Width of the graph
+              height={220} // Height of the graph
+              chartConfig={{
+                backgroundColor: '#ffffff',
+                backgroundGradientFrom: '#ffffff',
+                backgroundGradientTo: '#ffffff',
+                decimalPlaces: 2,
+                color: (opacity = 1) => rgba(0, 0, 0, {opacity}),
+                labelColor: (opacity = 1) => rgba(0, 0, 0, {opacity}),
+                style: {
+                  borderRadius: 16
+                },
+                propsForDots: {
+                  r: '6',
+                  strokeWidth: '2',
+                  stroke: '#ffa726'
+                }
+              }}
+              bezier
+              style={{
+                marginVertical: 8,
+                borderRadius: 16
+              }}
+            />
+          </>
+        )}
+      </View>
+    </ScrollView>
+  );
+};
 
-//   useEffect(() => {
-//     fetchData();
-//     const intervalId = setInterval(fetchData, 2000); // Fetch data every 2 seconds
-
-//     return () => clearInterval(intervalId); // Cleanup interval on component unmount
-//   }, []);
-
-//   return (
-//     <View className={`bg-secondary rounded-xl min-h-[px] justify-center items-center `}>
-//       <Text className="text-1xl">{data}</Text>
-//     </View>
-//   );
-// };
-
-// export default DataDisplay;
+export default DataDisplay;
