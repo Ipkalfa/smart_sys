@@ -3,32 +3,25 @@ import React, { useEffect} from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import SearchInput from '../../components/SearchInput'
 import EmptyState from '../../components/EmptyState'
-import MeasuredValues from '../../components/MeasuredValues'
-import {  searchMeasurements } from '../../lib/appwrite'
+import DeviceData from '../../components/DeviceData'
 import UseAppwrite from '../../lib/UseAppwrite'
 import { useLocalSearchParams } from 'expo-router'
+import { useGlobalContext } from '../../context/GlobalProvider'
+import { getDevicedata } from '../../lib/appwrite'
 
 
 
-const profile = () => {
-  const {query} = useLocalSearchParams()
-  const {data: measurements, refetch } = UseAppwrite( () => searchMeasurements(query));
-
-  console.log(query, measurements)
-
-useEffect(() => {
-   refetch()
-}, [query])
-
-
+const Profile = () => {
+const {user, setUser, setisLoggedIn} = useGlobalContext();
+  const {data: deviceData} = UseAppwrite( () => getDevicedata(device.$id));
 
   return (
     <SafeAreaView className="bg-primary h-full">
       <FlatList
-        data={measurements}
+        data={deviceData}
         keyExtractor={(item) => item.$id}
         renderItem={({item}) => (
-          <MeasuredValues value= {item} />
+          <DeviceData value= {item} />
         )}
         ListHeaderComponent={() => (
           <View className= "my-6 px-4 "> 
@@ -36,10 +29,10 @@ useEffect(() => {
               Search Results
             </Text>
             <Text className="text-2xl font-psemibold text-white">
-              {query}
+              {/* {query} */}
             </Text>
             <View className="mt-6 mb-8 ">
-              <SearchInput initialQuery={query}/>
+              {/* <SearchInput initialQuery={query}/> */}
             </View>
           </View>
         )}
@@ -55,4 +48,4 @@ useEffect(() => {
   )
 }
 
-export default profile
+export default Profile

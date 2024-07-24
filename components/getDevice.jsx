@@ -30,11 +30,11 @@ const DeviceInfoComponent = () => {
   return (
     <View>
       <Text>Device ID: {deviceInfo.deviceId}</Text>
-      <Text>Manufacturer: {deviceInfo.manufacturer}</Text>
+      {/* <Text>Manufacturer: {deviceInfo.manufacturer}</Text>
       <Text>Model: {deviceInfo.model}</Text>
       <Text>System Name: {deviceInfo.systemName}</Text>
       <Text>System Version: {deviceInfo.systemVersion}</Text>
-      <Text>Unique ID: {deviceInfo.uniqueId}</Text>
+      <Text>Unique ID: {deviceInfo.uniqueId}</Text> */}
     </View>
   )
 }
