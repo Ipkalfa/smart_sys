@@ -6,12 +6,12 @@ import SearchInput from '../../components/SearchInput'
 import EmptyState from '../../components/EmptyState'
 import MeasuredValues from '../../components/MeasuredValues'
 import { getAllMeasurements } from '../../lib/appwrite'
-import useAppwrite from '../../lib/UseAppwrite'
+import UseAppwrite from '../../lib/UseAppwrite'
 
 
 
 const Recents = () => {
-  const {data: measurements, refetch } = useAppwrite(getAllMeasurements);
+  const {data: measurements, refetch } = UseAppwrite(getAllMeasurements);
 
   const [refreshing, setRefreshing] = useState(false)
 
