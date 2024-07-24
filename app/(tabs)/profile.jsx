@@ -13,7 +13,9 @@ import { getDevicedata } from '../../lib/appwrite'
 
 const Profile = () => {
 const {user, setUser, setisLoggedIn} = useGlobalContext();
-  const {data: deviceData} = UseAppwrite( () => getDevicedata(device.$id));
+  const {data: deviceData} = UseAppwrite(() => getDevicedata(user.$id));
+
+  console.log(deviceData)
 
   return (
     <SafeAreaView className="bg-primary h-full">
