@@ -2,6 +2,7 @@ import { View, Text, Image, ScrollView } from 'react-native'
 import React from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { images } from '../../constants'
+import PowerEnergyGraph from '../../components/graph'
 
 const Monitoring = () => {
   
@@ -21,7 +22,7 @@ const Monitoring = () => {
         </View>
         <View className= "p-3">
           <Text className="text-white text-4xl font-bold">Monitoring</Text>
-
+          <PowerEnergyGraph/>
         </View>
       </SafeAreaView>
     )
