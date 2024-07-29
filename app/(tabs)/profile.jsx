@@ -4,29 +4,37 @@ import { SafeAreaView } from 'react-native-safe-area-context'
 import EmptyState from '../../components/EmptyState'
 import DeviceData from '../../components/DeviceData'
 import UseAppwrite from '../../lib/UseAppwrite'
-import { useGlobalContext } from '../../context/GlobalProvider'
-import { searchMeasurements, getDevicedata } from '../../lib/appwrite'
+import { useGlobalContext, measurement } from '../../context/GlobalProvider'
+import { searchMeasurements, getDevicedata, signOut } from '../../lib/appwrite'
 import InfoBox from '../../components/InfoBox'
 import { icons } from '../../constants'
+import MeasuredValues from '../../components/MeasuredValues'
 
-
+import { router } from 'expo-router'
 
 
 const Profile = () => {
-const {user, setUser, setisLoggedIn} = useGlobalContext();
-  const {data: deviceData} = UseAppwrite(() => getDevicedata(user.$id));
+const {user, measurement, setUser, setisLoggedIn} = useGlobalContext();
+  const {data: DeviceData, measurements} = UseAppwrite(() => 
+    getDevicedata(user.$id),
+    // MeasuredValues(measurement.id)
+  );
 
-  const logout = () =>{
+  const logout = async () =>{
+    await signOut();
+    setUser(null)
+    setisLoggedIn(false)
 
+    router.replace('/sign_in')
   }
 
 
-  console.log(deviceData)
+  console.log(DeviceData)
 
   return (
     <SafeAreaView className="bg-primary h-full">
       <FlatList
-        data={deviceData}
+        data={DeviceData}
         keyExtractor={(item) => item.$id}
         renderItem={({item}) => (
           <DeviceData value= {item} />
@@ -74,8 +82,8 @@ const {user, setUser, setisLoggedIn} = useGlobalContext();
         )}
         ListEmptyComponent={() => (
           <EmptyState
-            title="No Measurements Found."
-            subtitle="No measurements found for this search query."
+            title="No DevicesFound."
+
           />
         )}
 

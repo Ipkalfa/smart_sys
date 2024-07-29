@@ -7,10 +7,11 @@ import EmptyState from '../../components/EmptyState'
 import MeasuredValues from '../../components/MeasuredValues'
 import { getAllMeasurements } from '../../lib/appwrite'
 import UseAppwrite from '../../lib/UseAppwrite'
-
+import { useGlobalContext } from '../../context/GlobalProvider'
 
 
 const Recents = () => {
+  const {user, measurement, setUser, setisLoggedIn} = useGlobalContext();
   const {data: measurements, refetch } = UseAppwrite(getAllMeasurements);
 
   const [refreshing, setRefreshing] = useState(false)
@@ -36,10 +37,10 @@ const Recents = () => {
             <View className="justify-between items-start flex-row mb-6">
               <View>
                 <Text className="font-pmedium text-sm text-gray-100">
-                  Welcome Back
+                  Welcome Back,
                 </Text>
                 <Text className="text-2xl font-psemibold text-white">
-                  HomeSys
+                  {user?.username}
                 </Text>
               </View>
               <View className="mt-1.5">

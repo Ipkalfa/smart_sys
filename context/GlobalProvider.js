@@ -10,6 +10,7 @@ const GlobalProvider =({children}) => {
     const [isLoggedIn, setisLoggedIn] = useState(false);
     const [user, setUser] = useState(null);
     const [isLoading, setisLoading] = useState(true);
+    const [measurement, setMeasurement] = useState(false)
 
     useEffect(() => {
         getCurrentUser()
@@ -57,6 +58,7 @@ const GlobalProvider =({children}) => {
                 isLoggedIn,
                 setisLoggedIn,
                 user,
+                measurement,
                 setUser,
                 isLoading
             }}

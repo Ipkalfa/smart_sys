@@ -5,11 +5,13 @@ import { images } from '../../constants';
 import FormField from '../../components/FormField';
 import CustomButton from '../../components/CustomButton';
 import { Link, router } from 'expo-router';
-import { signIn } from '../../lib/appwrite';
+import { getCurrentUser, signIn } from '../../lib/appwrite';
+import { useGlobalContext } from '../../context/GlobalProvider';
 
 
 
 const SignIn = () => {
+  const {setUser,setisLoggedIn} = useGlobalContext();
   const [form, setForm] = useState({
     email:'',
     password:'',
@@ -27,6 +29,11 @@ const SignIn = () => {
       await signIn(form.email, form.password)
 
       //set it to global state...
+      const result = await getCurrentUser();
+
+      setUser(result);
+      setisLoggedIn(true)
+
 
       router.replace('/home')
     } catch (error) {
@@ -39,7 +46,7 @@ const SignIn = () => {
     <SafeAreaView className="bg-primary h-full">
       <ScrollView>
         <View className="w-full justify-center min-h-[83vh] px-4 my-6">
-          <Image source={images.logoh} resizeMode='contain' className="w-[115px] h-[35px]"/>
+          <Image source={images.logoh} resizeMode='contain' className="w-[115px] h-[90px]"/>
 
           <Text className="text-2xl text-white text-semibold mt-10 font-psemibold">Log in to HomeSys</Text>
 {/* autofillin for an amail */}

@@ -4,9 +4,10 @@ import { SafeAreaView } from 'react-native-safe-area-context'
 import { images } from '../../constants'
 import PowerEnergyGraph from '../../components/graph'
 import DataDisplay from '../../components/DataDisplays'
+import { useGlobalContext } from '../../context/GlobalProvider'
 
 const Monitoring = () => {
-  
+
     return (
       <SafeAreaView className= "bg-primary flex-1">
         <View  className="px-3 flex-row justify-between">
