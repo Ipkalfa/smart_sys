@@ -1,14 +1,11 @@
-import { View, Text, Image, ScrollView} from 'react-native'
+import { View, Text, Image, ScrollView, TouchableOpacity} from 'react-native'
 import React from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
-import { StatusBar } from 'expo-status-bar'
 import NameField from '../../components/NameField'
-import { Ionicons } from '@expo/vector-icons';
-
-
-import DataDisplay from '../../components/dataDisplay'
 import { images } from '../../constants'
-
+import {  } from 'react-native-gesture-handler'
+import SwitchButton from '../../components/SwitchButton'
+import SocketButton from '../../components/SocketButton'
 
 
 const Home = () => {
@@ -30,21 +27,17 @@ const Home = () => {
     <ScrollView className="min-h-[83vh]">
       
         <View className=" p-10 px-3 justify-between ">
-          <Image
-            source={images.witch}
-            className="w-full h-full "
-            resizeMode='contain'
-
+          <SocketButton/>
+          <NameField 
+            title={"Smart Socket"}
           />
-          <NameField />
         </View>
         <View className=" p-10 px-3  justify-between  ">
-          <Image
-            source={images.witch}
-            className="w-full h-full"
-            resizeMode='contain'
+          <SwitchButton/>
+          
+          <NameField 
+            title={"Smart Switch"}
           />
-          <NameField />
         </View>
       </ScrollView>
     </SafeAreaView>

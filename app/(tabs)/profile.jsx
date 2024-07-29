@@ -1,4 +1,4 @@
-import { View, Text, FlatList, Image} from 'react-native'
+import { View, Text, FlatList, Image, TouchableOpacity} from 'react-native'
 import React from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import EmptyState from '../../components/EmptyState'
@@ -7,7 +7,6 @@ import UseAppwrite from '../../lib/UseAppwrite'
 import { useGlobalContext } from '../../context/GlobalProvider'
 import { searchMeasurements, getDevicedata } from '../../lib/appwrite'
 import InfoBox from '../../components/InfoBox'
-import { TouchableOpacity } from 'react-native-gesture-handler'
 import { icons } from '../../constants'
 
 
@@ -57,12 +56,12 @@ const {user, setUser, setisLoggedIn} = useGlobalContext();
             />
 
           <View className="mt-5 flex-row">
-            <InfoBox
+            {/* <InfoBox
               title={measurements.length || 0}
               subtitle="Measurements"
               containerStyles='mr-10'
               titleStyles="text-xl"
-            />  
+            />   */}
             <InfoBox
               title=""
               subtitle="Devices connected"

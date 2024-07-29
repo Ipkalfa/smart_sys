@@ -24,8 +24,8 @@
 //   }, []);
 
 //   return (
-//     <View className={`bg-secondary rounded-xl min-h-[px] justify-center items-center `}>
-//       <Text className="text-1xl">{data}</Text>
+//     <View className={`bg-secondary border border-secondary-200 rounded-xl min-h-[px] justify-center items-center `}>
+//       <Text className="text-1xl text-white ">{data}</Text>
 //     </View>
 //   );
 // };

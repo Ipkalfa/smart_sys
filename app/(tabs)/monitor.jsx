@@ -3,6 +3,7 @@ import React from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { images } from '../../constants'
 import PowerEnergyGraph from '../../components/graph'
+import DataDisplay from '../../components/DataDisplays'
 
 const Monitoring = () => {
   
@@ -23,6 +24,19 @@ const Monitoring = () => {
         <View className= "p-3">
           <Text className="text-white text-4xl font-bold">Monitoring</Text>
           <PowerEnergyGraph/>
+        </View>
+        <View className= "p-3 flex-row justify-evenly">
+          <DataDisplay
+           title={"Voltage"}
+           value={122}
+           unit={"V"}
+          />
+          <DataDisplay
+           title={"Current"}
+           value= {12}
+           unit={"A"}
+          />
+
         </View>
       </SafeAreaView>
     )
