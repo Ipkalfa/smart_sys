@@ -11,7 +11,7 @@ import { useGlobalContext } from '../../context/GlobalProvider'
 
 
 const Recents = () => {
-  const {user, measurement, setUser, setisLoggedIn} = useGlobalContext();
+    const {user, measurement, setUser, setisLoggedIn} = useGlobalContext();
   const {data: measurements, refetch } = UseAppwrite(getAllMeasurements);
 
   const [refreshing, setRefreshing] = useState(false)
