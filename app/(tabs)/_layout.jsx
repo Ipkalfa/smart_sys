@@ -52,22 +52,7 @@ const TabsLayout = () => {
                         />
                     )
                 }}            
-            />  
-                        <Tabs.Screen
-                name="recents"
-                options={{
-                    title: 'Recents',
-                    headerShown: false,
-                    tabBarIcon: ({color, focused }) => (
-                        <TabIcon
-                            icon={icons.recentss}
-                            color={color}
-                            name="Recents"
-                            focused={focused}
-                        />
-                    )
-                }}            
-            />   
+            /> 
             <Tabs.Screen
                 name="monitor"
                 options={{
@@ -82,7 +67,23 @@ const TabsLayout = () => {
                         />
                     )
                 }}            
-            />  
+            />   
+            <Tabs.Screen
+                name="recents"
+                options={{
+                    title: 'Recents',
+                    headerShown: false,
+                    tabBarIcon: ({color, focused }) => (
+                        <TabIcon
+                            icon={icons.recentss}
+                            color={color}
+                            name="Recents"
+                            focused={focused}
+                        />
+                    )
+                }}            
+            />   
+
             <Tabs.Screen
                 name="profile"
                 options={{

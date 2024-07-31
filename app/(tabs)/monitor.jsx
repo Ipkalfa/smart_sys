@@ -32,13 +32,13 @@ const Monitoring = () => {
             </View>
           </View>  
       <ScrollView contentInsetAdjustmentBehavior="automatic">
-
-        <View className= "justify-center items-center pl-6">
-          <Text className="text-white text-4xl font-bold">Monitoring</Text>
-          <PowerEnergyChart/>
+        <View className="justify-center">
+          <View className= "justify-center items-center ">
+            <Text className="text-white text-4xl font-bold">Monitoring</Text>
+            <PowerEnergyChart/>
+          </View>
         </View>
-         
-        <View className="flex-row justify-evenly p-6">
+        <View className="flex-row justify-evenly p-4">
           <DataDisplay title="Voltage" unit="V" otherStyles="" />
           <DataDisplay title="Current" unit="A" otherStyles="" />
         </View>

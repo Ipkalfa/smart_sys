@@ -6,10 +6,11 @@ import React, { useState } from 'react'
 const NameField = ({title, value,}) => {
     
   return (
-      <View className= " border-2  w-30% h-16 px-4 bg-black-200 rounded-2xl justify-center items-center flex-row space-x-4">
-        <Text className="flex-1 text-white font-psemibold text-base mt-0.5 ">{title}</Text>
-
+    <View className="items-center">
+      <View className= "  border-2  w-[200] h-16 px-6 bg-black-200 rounded-2xl border-secondary-100 items-center justify-center space-x-4">
+        <Text className=" text-white font-psemibold text-base ">{title}</Text>
       </View>
+    </View>  
   )
 }
 

@@ -41,8 +41,8 @@ const DataDisplay = ({ title, unit, otherStyles }) => {
   return (
     <View className={`space-y-2 items-center ${otherStyles}`}>
       <Text className="text-xl text-gray-100 font-pmedium">{title}</Text>
-      <View className="border-2 border-secondary-100 w-28 h-9 px-4 bg-black-200 rounded-2xl focus:border-secondary  items-center">
-        <Text className="flex-1 text-white font-psemibold text-lg">
+      <View className="border-2 border-secondary-100 w-28 h-9 px-4 bg-black-200 rounded-xl focus:border-secondary  items-center">
+        <Text className="flex-1 text-white font-psemibold text-xl">
           {value} {unit}
         </Text>
       </View>

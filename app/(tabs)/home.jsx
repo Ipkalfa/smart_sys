@@ -11,7 +11,7 @@ const Home = () => {
  
   return (
     <SafeAreaView className="bg-primary flex-1">
-      <View  className="px-3 flex-row justify-between">
+      <View  className="px-4 py-2 flex-row justify-between">
         <View>
           <Text className="text-gray-100 font-pmedium text-sm">Welcome to</Text>
           <Text className="text-white text-2xl font-psemibold">HomeSys</Text>

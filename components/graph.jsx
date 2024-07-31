@@ -17,12 +17,12 @@ const PowerEnergyGraph = () => {
           datasets: [
             {
               data: powerData,
-              color: (opacity = 1) => `rgba(134, 65, 244, ${opacity})`, // Power color
+              color: (opacity = 1) => `rgba(23, 32, 42 , ${opacity})`, // Power color
               strokeWidth: 2 // Power line width
             },
             {
               data: energyData,
-              color: (opacity = 1) => `rgba(244, 65, 134, ${opacity})`, // Energy color
+              color: (opacity = 1) => `rgba(244, 246, 247, ${opacity})`, // Energy color
               strokeWidth: 2 // Energy line width
             }
           ],
@@ -55,15 +55,15 @@ const PowerEnergyGraph = () => {
 
   return (
     <SafeAreaView>
-      <View className="pr-6 pt-6">
+      <View className="justify-center">
         <LineChart
           data={data}
           width={Dimensions.get('window').width} // Width of the chart
-          height={220} // Height of the chart
+          height={280} // Height of the chart
           chartConfig={{
-            backgroundColor: "#e26a00",
-            backgroundGradientFrom: "#fb8c00",
-            backgroundGradientTo: "#ffa726",
+            backgroundColor: "#36454F",
+            backgroundGradientFrom: "#36454F",
+            backgroundGradientTo: "#d68910",
             decimalPlaces: 2, // Number of decimal places
             color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
             labelColor: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
@@ -73,7 +73,7 @@ const PowerEnergyGraph = () => {
             propsForDots: {
               r: "6",
               strokeWidth: "2",
-              stroke: "#ffa726"
+              stroke: "#17202a"
             }
           }}
           bezier // Optional bezier curve for smoother lines

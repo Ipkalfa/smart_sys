@@ -1,4 +1,4 @@
-import { View, Text, FlatList, Image, TouchableOpacity, ActivityIndicator } from 'react-native';
+import { View, Text, FlatList, Image, TouchableOpacity, ActivityIndicator, RefreshControl } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import EmptyState from '../../components/EmptyState';
@@ -13,28 +13,31 @@ const Profile = () => {
   const { user, setUser, setisLoggedIn } = useGlobalContext();
   const [deviceDatas, setDeviceDatas] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [refreshing, setRefreshing] = useState(false);
   const [error, setError] = useState(null);
   const router = useRouter();
 
+  const fetchDeviceData = async () => {
+    if (!user) {
+      setLoading(false);
+      setRefreshing(false);
+      return;
+    }
+
+    try {
+      const data = await getDeviceStatus(); // Fetch all devices data
+      console.log('Device Data:', data); // Log the fetched device data
+      setDeviceDatas(data.documents); // Assuming data.documents contains the list of devices
+    } catch (error) {
+      console.error('Error fetching device data:', error);
+      setError(error);
+    } finally {
+      setLoading(false);
+      setRefreshing(false);
+    }
+  };
+
   useEffect(() => {
-    const fetchDeviceData = async () => {
-      if (!user) {
-        setLoading(false);
-        return;
-      }
-
-      try {
-        const data = await getDeviceStatus(); // Fetch all devices data
-        console.log('Device Data:', data); // Log the fetched device data
-        setDeviceDatas(data.documents); // Assuming data.documents contains the list of devices
-      } catch (error) {
-        console.error('Error fetching device data:', error);
-        setError(error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
     fetchDeviceData();
   }, [user]);
 
@@ -43,6 +46,11 @@ const Profile = () => {
     setUser(null);
     setisLoggedIn(false);
     router.replace('/sign_in');
+  };
+
+  const onRefresh = async () => {
+    setRefreshing(true);
+    await fetchDeviceData();
   };
 
   if (loading) {
@@ -75,20 +83,22 @@ const Profile = () => {
               className="w-full items-end mb-10"
               onPress={logout}
             >
-              <Image source={icons.logout}
-                resizeMode="contain" 
+              <Image
+                source={icons.logout}
+                resizeMode="contain"
                 className="w-6 h-6"
-              />  
+              />
             </TouchableOpacity>
             <View className="w-16 h-16 border border-secondary rounded-lg justify-center items-center">
-              <Image source={{ uri: user?.avatar }}
-                className="w-[90%] h-[90%] rounded-lg "
-                resizeMode='cover'
+              <Image
+                source={{ uri: user?.avatar }}
+                className="w-[90%] h-[90%] rounded-lg"
+                resizeMode="cover"
               />
             </View>
             <InfoBox
               title={user?.username}
-              containerStyles='mt-5'
+              containerStyles="mt-5"
               titleStyles="text-lg"
             />
             <View className="mt-5 flex-row">
@@ -96,18 +106,17 @@ const Profile = () => {
                 title={deviceDatas.length}
                 subtitle="Devices connected"
                 titleStyles="text-xl"
-              />          
+              />
             </View>
           </View>
         )}
         ListEmptyComponent={() => (
-          <EmptyState
-            title="No Devices Found."
-          />
+          <EmptyState title="No Devices Found." />
         )}
+        refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
       />
     </SafeAreaView>
   );
-}
+};
 
 export default Profile;
