@@ -1,54 +1,84 @@
-import { View, Text, FlatList, Image, TouchableOpacity} from 'react-native'
-import React from 'react'
-import { SafeAreaView } from 'react-native-safe-area-context'
-import EmptyState from '../../components/EmptyState'
-import DeviceData from '../../components/DeviceData'
-import UseAppwrite from '../../lib/UseAppwrite'
-import { useGlobalContext, measurement } from '../../context/GlobalProvider'
-import { searchMeasurements, getDevicedata, signOut } from '../../lib/appwrite'
-import InfoBox from '../../components/InfoBox'
-import { icons } from '../../constants'
-import MeasuredValues from '../../components/MeasuredValues'
-
-import { router } from 'expo-router'
-
+import { View, Text, FlatList, Image, TouchableOpacity, ActivityIndicator } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import EmptyState from '../../components/EmptyState';
+import DeviceData from '../../components/DeviceData';
+import { useGlobalContext } from '../../context/GlobalProvider';
+import { getDeviceStatus, signOut } from '../../lib/appwrite';
+import InfoBox from '../../components/InfoBox';
+import { icons } from '../../constants';
+import { useRouter } from 'expo-router';
 
 const Profile = () => {
-const {user, measurement, setUser, setisLoggedIn} = useGlobalContext();
-  const {data: DeviceData, measurements} = UseAppwrite(() => 
-    getDevicedata(user.$id),
-    // MeasuredValues(measurement.id)
-  );
+  const { user, setUser, setisLoggedIn } = useGlobalContext();
+  const [deviceDatas, setDeviceDatas] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const router = useRouter();
 
-  const logout = async () =>{
+  useEffect(() => {
+    const fetchDeviceData = async () => {
+      if (!user) {
+        setLoading(false);
+        return;
+      }
+
+      try {
+        const data = await getDeviceStatus(); // Fetch all devices data
+        console.log('Device Data:', data); // Log the fetched device data
+        setDeviceDatas(data.documents); // Assuming data.documents contains the list of devices
+      } catch (error) {
+        console.error('Error fetching device data:', error);
+        setError(error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchDeviceData();
+  }, [user]);
+
+  const logout = async () => {
     await signOut();
-    setUser(null)
-    setisLoggedIn(false)
+    setUser(null);
+    setisLoggedIn(false);
+    router.replace('/sign_in');
+  };
 
-    router.replace('/sign_in')
+  if (loading) {
+    return (
+      <SafeAreaView className="bg-primary h-full justify-center items-center">
+        <ActivityIndicator size="large" color="#00ff00" />
+      </SafeAreaView>
+    );
   }
 
-
-  console.log(DeviceData)
+  if (error) {
+    return (
+      <SafeAreaView className="bg-primary h-full justify-center items-center">
+        <Text>Error: {error.message}</Text>
+      </SafeAreaView>
+    );
+  }
 
   return (
     <SafeAreaView className="bg-primary h-full">
       <FlatList
-        data={DeviceData}
-        keyExtractor={(item) => item.$id}
-        renderItem={({item}) => (
-          <DeviceData value= {item} />
+        data={deviceDatas}
+        keyExtractor={(item) => item.$id.toString()}
+        renderItem={({ item }) => (
+          <DeviceData deviceid={item.deviceid} status={item.status} />
         )}
         ListHeaderComponent={() => (
-          <View className="w-full justify-center items-center mt-6 mb-12 px-4 ">
+          <View className="w-full justify-center items-center mt-6 mb-12 px-4">
             <TouchableOpacity
               className="w-full items-end mb-10"
               onPress={logout}
             >
-             <Image source= {icons.logout}
-              resizeMode="contan" 
-              className="w-6 h-6"
-             />  
+              <Image source={icons.logout}
+                resizeMode="contain" 
+                className="w-6 h-6"
+              />  
             </TouchableOpacity>
             <View className="w-16 h-16 border border-secondary rounded-lg justify-center items-center">
               <Image source={{ uri: user?.avatar }}
@@ -56,40 +86,28 @@ const {user, measurement, setUser, setisLoggedIn} = useGlobalContext();
                 resizeMode='cover'
               />
             </View>
-
             <InfoBox
               title={user?.username}
               containerStyles='mt-5'
               titleStyles="text-lg"
             />
-
-          <View className="mt-5 flex-row">
-            {/* <InfoBox
-              title={measurements.length || 0}
-              subtitle="Measurements"
-              containerStyles='mr-10'
-              titleStyles="text-xl"
-            />   */}
-            <InfoBox
-              title=""
-              subtitle="Devices connected"
-              titleStyles="text-xl"
-            />          
-          </View>
-
-
+            <View className="mt-5 flex-row">
+              <InfoBox
+                title={deviceDatas.length}
+                subtitle="Devices connected"
+                titleStyles="text-xl"
+              />          
+            </View>
           </View>
         )}
         ListEmptyComponent={() => (
           <EmptyState
-            title="No DevicesFound."
-
+            title="No Devices Found."
           />
         )}
-
       />
     </SafeAreaView>
-  )
+  );
 }
 
-export default Profile
+export default Profile;
