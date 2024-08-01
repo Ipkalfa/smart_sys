@@ -31,7 +31,7 @@ const DataDisplay = ({ title, unit, otherStyles }) => {
   }, [title]);
 
   if (loading) {
-    return <ActivityIndicator size="large" color="#00ff00" />;
+    return <ActivityIndicator size="large" color="#f1b010"/>;
   }
 
   if (error) {

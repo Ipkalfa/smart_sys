@@ -11,22 +11,17 @@ const PowerEnergyGraph = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const { powerData, energyData, labels } = await getLatestPowerEnergyData();
+        const { energyData, labels } = await getLatestPowerEnergyData();
         setData({
           labels,
           datasets: [
-            {
-              data: powerData,
-              color: (opacity = 1) => `rgba(23, 32, 42 , ${opacity})`, // Power color
-              strokeWidth: 2 // Power line width
-            },
             {
               data: energyData,
               color: (opacity = 1) => `rgba(244, 246, 247, ${opacity})`, // Energy color
               strokeWidth: 2 // Energy line width
             }
           ],
-          legend: ["Power (kW)", "Energy (kWh)"] // Labels for the datasets
+          legend: ["Energy (kWh)"] // Label for the dataset
         });
       } catch (error) {
         console.error('Error fetching data:', error);
@@ -46,7 +41,7 @@ const PowerEnergyGraph = () => {
   }, []);
 
   if (loading) {
-    return <ActivityIndicator size="large" color="#00ff00" />;
+    return <ActivityIndicator size="large" color="#f1b010" />;
   }
 
   if (error) {
@@ -81,10 +76,9 @@ const PowerEnergyGraph = () => {
             marginVertical: 8,
             borderRadius: 16
           }}
-        
         />
       </View>
-    </SafeAreaView>  
+    </SafeAreaView>
   );
 };
 

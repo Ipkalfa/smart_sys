@@ -25,9 +25,9 @@ const Profile = () => {
     }
 
     try {
-      const data = await getDeviceStatus(); // Fetch all devices data
-      console.log('Device Data:', data); // Log the fetched device data
-      setDeviceDatas(data.documents); // Assuming data.documents contains the list of devices
+      const data = await getDeviceStatus();
+      console.log('Device Data:', data);
+      setDeviceDatas(data.documents);
     } catch (error) {
       console.error('Error fetching device data:', error);
       setError(error);
@@ -56,7 +56,7 @@ const Profile = () => {
   if (loading) {
     return (
       <SafeAreaView className="bg-primary h-full justify-center items-center">
-        <ActivityIndicator size="large" color="#00ff00" />
+        <ActivityIndicator size="large" color="#f1b010 " />
       </SafeAreaView>
     );
   }
@@ -90,11 +90,16 @@ const Profile = () => {
               />
             </TouchableOpacity>
             <View className="w-16 h-16 border border-secondary rounded-lg justify-center items-center">
-              <Image
-                source={{ uri: user?.avatar }}
-                className="w-[90%] h-[90%] rounded-lg"
-                resizeMode="cover"
-              />
+              {user?.avatar ? (
+                <Image
+                  source={{ uri: user?.avatar }}
+                  className="w-[90%] h-[90%] rounded-lg"
+                  resizeMode="cover"
+                  onError={(error) => console.log('Error loading avatar:', error.nativeEvent.error)}
+                />
+              ) : (
+                <Text>No Avatar</Text>
+              )}
             </View>
             <InfoBox
               title={user?.username}
