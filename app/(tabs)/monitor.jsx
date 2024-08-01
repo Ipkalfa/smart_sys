@@ -2,7 +2,7 @@ import { View, Text, Image, ScrollView } from 'react-native'
 import React from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { images } from '../../constants'
-// import DataDisplay from '../../components/DataDisplays'
+import DataDisplay from '../../components/DataDisplays'
 import { useGlobalContext } from '../../context/GlobalProvider'
 import PowerEnergyChart from '../../components/graph'
 
@@ -39,8 +39,8 @@ const Monitoring = () => {
           </View>
         </View>
         <View className="flex-row justify-evenly p-4">
-          {/* <DataDisplay title="Voltage" unit="V" otherStyles="" />
-          <DataDisplay title="Current" unit="A" otherStyles="" /> */}
+          <DataDisplay title="Voltage" unit="V" otherStyles="" />
+          <DataDisplay title="Current" unit="A" otherStyles="" />
         </View>
 
       </ScrollView>  
