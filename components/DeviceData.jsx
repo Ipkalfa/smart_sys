@@ -1,5 +1,5 @@
-import { View, Text, ActivityIndicator } from 'react-native';
-import React, { useState, useEffect } from 'react';
+import { View, Text, ActivityIndicator } from "react-native";
+import React, { useState, useEffect } from "react";
 
 const DeviceData = ({ deviceid, status }) => {
   const [deviceData, setDeviceData] = useState({ deviceid, status });
@@ -12,7 +12,7 @@ const DeviceData = ({ deviceid, status }) => {
         // Assuming deviceid and status are already passed as props and setDeviceData is not needed
         setDeviceData({ deviceid, status });
       } catch (error) {
-        console.error('Error fetching device data:', error);
+        console.error("Error fetching device data:", error);
         setError(error.message);
       } finally {
         setLoading(false);
@@ -38,12 +38,12 @@ const DeviceData = ({ deviceid, status }) => {
             <Text className="text-white font-psemibold text-lg ">{deviceData.deviceid}</Text>
           </View>
           <View className="justify-center flex-1 items-center ml-3 gap-y-1">
-            <Text className="text-white font-psemibold">{deviceData.status ? 'Active' : 'Inactive'}</Text>
+            <Text className="text-white font-psemibold">{deviceData.status ? "Active" : "Inactive"}</Text>
           </View>
         </View>
       </View>
     </View>
   );
-}
+};
 
 export default DeviceData;
