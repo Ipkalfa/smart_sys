@@ -41,11 +41,11 @@ const SwitchButton = ({ title, containerStyles, textStyles, isLoading }) => {
       activeOpacity={0.7} // opacity of button once pressed
       className={`${
         status ? "bg-secondary" : "bg-gray-300"
-      } rounded-xl justify-center items-center ${containerStyles} ${isLoading ? "opacity-50" : ""}`}
+      } rounded-xl justify-center  items-center ${containerStyles} ${isLoading ? "opacity-50" : ""}`}
       disabled={isLoading}
     >
-      <Image source={images.witch} className="w-24 h-24" resizeMode="contain" />
-      <Text className="py-5">{JSON.stringify({ data: documentId, status })}</Text>
+      <Image source={images.witch} className="w-full h-full" resizeMode="contain" />
+      {/* <Text className="py-5">{JSON.stringify({ data: documentId, status })}</Text> */}
     </TouchableOpacity>
   );
 };

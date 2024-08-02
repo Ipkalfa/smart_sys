@@ -20,7 +20,7 @@ const Home = () => {
         </View>
       </View>
       <ScrollView className="min-h-[83vh]">
-        <View className=" p-10 px-3 justify-between ">
+        <View className=" mx-[80px] mb-[80px] mt-[20px] justify-between ">
           <SocketButton
             title="Toggle Status"
             containerStyles="some-container-styles"
@@ -30,7 +30,7 @@ const Home = () => {
           />
           <NameField title={"Smart Socket"} />
         </View>
-        <View className=" p-10 px-3  justify-between  ">
+        <View className=" mx-[80px] mb-[80px] mt-[0px] justify-between  ">
           <SwitchButton />
 
           <NameField title={"Smart Switch"} />

@@ -45,8 +45,8 @@ const SocketButton = ({ title, containerStyles, textStyles, isLoading }) => {
       } rounded-xl justify-center items-center ${containerStyles} ${isLoading ? "opacity-50" : ""}`}
       disabled={isLoading}
     >
-      <Image source={images.witch} className="w-24 h-24" resizeMode="contain" />
-      <Text className="py-5">{JSON.stringify({ data: documentId })}</Text>
+      <Image source={images.witch} className="w-full h-full" resizeMode="contain" />
+      {/* <Text className="py-5">{JSON.stringify({ data: documentId })}</Text> */}
     </TouchableOpacity>
   );
 };

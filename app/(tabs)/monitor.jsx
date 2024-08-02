@@ -1,14 +1,17 @@
-import React, { useState, useCallback } from 'react';
-import { View, Text, Image, ScrollView, RefreshControl } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { images } from '../../constants';
-import DataDisplay from '../../components/DataDisplays';
-import { useGlobalContext } from '../../context/GlobalProvider';
-import PowerEnergyChart from '../../components/graph';
+import React, { useState, useCallback, useEffect } from "react";
+import { View, Text, Image, ScrollView, RefreshControl } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { images } from "../../constants";
+import DataDisplay from "../../components/DataDisplays";
+import { useGlobalContext } from "../../context/GlobalProvider";
+import PowerEnergyChart from "../../components/graph";
+import { client } from "../../lib/appwrite";
 
 const Monitoring = () => {
   const { user, measurement, setUser, setisLoggedIn } = useGlobalContext();
   const [refreshing, setRefreshing] = useState(false);
+
+  // realtime goes here
 
   // Function to handle refresh
   const onRefresh = useCallback(async () => {
@@ -17,7 +20,7 @@ const Monitoring = () => {
       // Perform your refresh logic here, e.g., fetch new data
       // Example: await fetchData();
     } catch (error) {
-      console.error('Error refreshing data:', error);
+      console.error("Error refreshing data:", error);
     } finally {
       setRefreshing(false);
     }
@@ -28,19 +31,11 @@ const Monitoring = () => {
       <View className="my-6 px-4 space-y-6">
         <View className="justify-between items-start flex-row mb-6">
           <View>
-            <Text className="font-pmedium text-sm text-gray-100">
-              Monitor Your Consumption,
-            </Text>
-            <Text className="text-2xl font-psemibold text-white">
-              {user?.username}
-            </Text>
+            <Text className="font-pmedium text-sm text-gray-100">Monitor Your Consumption,</Text>
+            <Text className="text-2xl font-psemibold text-white">{user?.username}</Text>
           </View>
           <View className="mt-1.5">
-            <Image
-              source={images.logoh}
-              className="w-9 h-10"
-              resizeMode="contain"
-            />
+            <Image source={images.logoh} className="w-9 h-10" resizeMode="contain" />
           </View>
         </View>
       </View>
@@ -50,7 +45,7 @@ const Monitoring = () => {
           <RefreshControl
             refreshing={refreshing}
             onRefresh={onRefresh}
-            colors={['#00ff00']} // Customize the refresh control color if needed
+            colors={["#00ff00"]} // Customize the refresh control color if needed
           />
         }
       >
