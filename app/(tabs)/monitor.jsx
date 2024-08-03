@@ -5,7 +5,7 @@ import { images } from "../../constants";
 import DataDisplay from "../../components/DataDisplays";
 import { useGlobalContext } from "../../context/GlobalProvider";
 import PowerEnergyChart from "../../components/graph";
-import { getLatestReadings } from "../../lib/appwrite"; // Ensure correct path to your api file
+import { getTotalPrice } from "../../lib/appwrite"; // Ensure correct path to your api file
 
 const Monitoring = () => {
   const { user } = useGlobalContext();
@@ -16,11 +16,11 @@ const Monitoring = () => {
   const onRefresh = useCallback(async () => {
     setRefreshing(true);
     try {
-      const readingsSmartSocket = await getLatestReadings("Smart Socket");
-      const readingsSmartSwitch = await getLatestReadings("Smart Switch");
+      const totalPriceSocket = await getTotalPrice("Smart Socket");
+      const totalPriceSwitch = await getTotalPrice("Smart Switch");
 
       // Calculate total price
-      const totalPrice = (readingsSmartSocket.price || 0) + (readingsSmartSwitch.price || 0);
+      const totalPrice = totalPriceSocket + totalPriceSwitch;
       setTotalPrice(totalPrice);
     } catch (error) {
       console.error("Error refreshing data:", error);
@@ -32,11 +32,11 @@ const Monitoring = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const readingsSmartSocket = await getLatestReadings("Smart Socket");
-        const readingsSmartSwitch = await getLatestReadings("Smart Switch");
+        const totalPriceSocket = await getTotalPrice("Smart Socket");
+        const totalPriceSwitch = await getTotalPrice("Smart Switch");
 
         // Calculate total price
-        const totalPrice = (readingsSmartSocket.price || 0) + (readingsSmartSwitch.price || 0);
+        const totalPrice = totalPriceSocket + totalPriceSwitch;
         setTotalPrice(totalPrice);
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -85,7 +85,7 @@ const Monitoring = () => {
             <DataDisplay Title="Smart Switch" title="Current" unit="A" deviceId="Smart Switch" otherStyles="" />
           </View>
           <View className="justify-center items-center p-4">
-            <Text className="text-white text-2xl font-bold">Bill: GH₵ {totalPrice.toFixed(2)}</Text>
+            <Text className="text-white text-2xl font-bold">Total Bill: GH₵ {totalPrice.toFixed(2)}</Text>
           </View>
         </View>
       </ScrollView>
