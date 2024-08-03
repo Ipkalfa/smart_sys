@@ -11,8 +11,6 @@ const Monitoring = () => {
   const { user, measurement, setUser, setisLoggedIn } = useGlobalContext();
   const [refreshing, setRefreshing] = useState(false);
 
-  // realtime goes here
-
   // Function to handle refresh
   const onRefresh = useCallback(async () => {
     setRefreshing(true);
@@ -49,15 +47,19 @@ const Monitoring = () => {
           />
         }
       >
-        <View className="justify-center">
+        <View className="justify-center px-2">
           <View className="justify-center items-center">
             <Text className="text-white text-4xl font-bold">Monitoring</Text>
             <PowerEnergyChart />
           </View>
         </View>
         <View className="flex-row justify-evenly p-4">
-          <DataDisplay title="Voltage" unit="V" otherStyles="" />
-          <DataDisplay title="Current" unit="A" otherStyles="" />
+          <DataDisplay Title="Smart Socket" title="Voltage" unit="V" deviceId="Smart Socket" otherStyles="" />
+          <DataDisplay Title="Smart Socket" title="Current" unit="A" deviceId="Smart Socket" otherStyles="" />
+        </View>
+        <View className="flex-row justify-evenly p-4">
+          <DataDisplay Title="Smart Switch" title="Voltage" unit="V" deviceId="Smart Switch" otherStyles="" />
+          <DataDisplay Title="Smart Switch" title="Current" unit="A" deviceId="Smart Switch" otherStyles="" />
         </View>
       </ScrollView>
     </SafeAreaView>

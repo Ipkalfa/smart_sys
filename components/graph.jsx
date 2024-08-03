@@ -11,17 +11,22 @@ const PowerEnergyGraph = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const { energyData, labels } = await getLatestPowerEnergyData();
+        const { socketEnergyData, switchEnergyData, labels } = await getLatestPowerEnergyData();
         setData({
           labels,
           datasets: [
             {
-              data: energyData,
-              color: (opacity = 1) => `rgba(244, 246, 247, ${opacity})`, // Energy color
-              strokeWidth: 2 // Energy line width
+              data: socketEnergyData,
+              color: (opacity = 1) => `rgba(244, 246, 247, ${opacity})`, // Energy color for Smart Socket
+              strokeWidth: 2 // Energy line width for Smart Socket
+            },
+            {
+              data: switchEnergyData,
+              color: (opacity = 1) => `rgba(255, 0, 0, ${opacity})`, // Energy color for Smart Switch
+              strokeWidth: 2 // Energy line width for Smart Switch
             }
           ],
-          legend: ["Energy (kWh)"] // Label for the dataset
+          legend: ["Socket Energy (kWh)", "Switch Energy (kWh)"] // Labels for the datasets
         });
       } catch (error) {
         console.error('Error fetching data:', error);
