@@ -75,7 +75,7 @@ const Profile = () => {
       <FlatList
         data={deviceDatas}
         keyExtractor={(item) => item.$id.toString()}
-        renderItem={({ item }) => <DeviceData deviceid={item.deviceid} status={item.status} />}
+        renderItem={({ item }) => <DeviceData deviceid={item.deviceName} status={item.status} />}
         ListHeaderComponent={() => (
           <View className="w-full justify-center items-center mt-6 mb-12 px-4">
             <TouchableOpacity className="w-full items-end mb-10" onPress={logout}>
@@ -90,7 +90,7 @@ const Profile = () => {
                   onError={(error) => console.log("Error loading avatar:", error.nativeEvent.error)}
                 />
               ) : (
-                <Text>No Avatar</Text>
+                <Text className="text-white">No Avatar</Text>
               )}
             </View>
             <InfoBox title={user?.username} containerStyles="mt-5" titleStyles="text-lg" />

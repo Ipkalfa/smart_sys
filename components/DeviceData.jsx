@@ -34,7 +34,7 @@ const DeviceData = ({ deviceid, status }) => {
     <View className="flex-col items-center px-4 mb-14">
       <View className="flex-row gap-3 items-start">
         <View className="justify-center items-center flex-row flex-1 ">
-          <View className="w-[100px] h-[40px] rounded-lg border border-secondary-100 justify-center items-center p-0.5">
+          <View className="w-[150px] h-[40px] rounded-lg border border-secondary-100 justify-center items-center p-0.5">
             <Text className="text-white font-psemibold text-lg ">{deviceData.deviceid}</Text>
           </View>
           <View className="justify-center flex-1 items-center ml-3 gap-y-1">

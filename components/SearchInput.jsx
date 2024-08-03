@@ -13,7 +13,7 @@ const SearchInput = ({initialQuery}) => {
         <TextInput
             className="flex-1 text-white font-pregular text-base mt-.5"
             value={query}
-            placeholder="Search for a specific time frame"
+            placeholder="Search for specific device readings"
             placeholderTextColor="#CDCDE0"
             onChangeText={(e) => setQuery(e)}
       
