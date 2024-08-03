@@ -43,7 +43,7 @@ const DataDisplay = ({ title, Title, unit, deviceId, otherStyles }) => {
       <Text className="text-lg text-gray-100 font-pmedium"> {Title}</Text>
       <View className={`space-y-2 items-center ${otherStyles}`}>
         <Text className="text-lg text-gray-100 font-pmedium"> {title}</Text>
-        <View className="border-2 border-secondary-100 w-28 h-9 px-4 bg-black-200 rounded-xl focus:border-secondary  items-center">
+        <View className="border-2 border-secondary-100 w-34 h-9 px-4 bg-black-200 rounded-xl focus:border-secondary  items-center">
           <Text className="flex-1 text-white font-psemibold text-xl">
             {value} {unit}
           </Text>

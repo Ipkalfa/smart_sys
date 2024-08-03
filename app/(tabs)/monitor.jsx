@@ -5,23 +5,45 @@ import { images } from "../../constants";
 import DataDisplay from "../../components/DataDisplays";
 import { useGlobalContext } from "../../context/GlobalProvider";
 import PowerEnergyChart from "../../components/graph";
-import { client } from "../../lib/appwrite";
+import { getLatestReadings } from "../../lib/appwrite"; // Ensure correct path to your api file
 
 const Monitoring = () => {
-  const { user, measurement, setUser, setisLoggedIn } = useGlobalContext();
+  const { user } = useGlobalContext();
   const [refreshing, setRefreshing] = useState(false);
+  const [totalPrice, setTotalPrice] = useState(0);
 
   // Function to handle refresh
   const onRefresh = useCallback(async () => {
     setRefreshing(true);
     try {
-      // Perform your refresh logic here, e.g., fetch new data
-      // Example: await fetchData();
+      const readingsSmartSocket = await getLatestReadings("Smart Socket");
+      const readingsSmartSwitch = await getLatestReadings("Smart Switch");
+
+      // Calculate total price
+      const totalPrice = (readingsSmartSocket.price || 0) + (readingsSmartSwitch.price || 0);
+      setTotalPrice(totalPrice);
     } catch (error) {
       console.error("Error refreshing data:", error);
     } finally {
       setRefreshing(false);
     }
+  }, []);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const readingsSmartSocket = await getLatestReadings("Smart Socket");
+        const readingsSmartSwitch = await getLatestReadings("Smart Switch");
+
+        // Calculate total price
+        const totalPrice = (readingsSmartSocket.price || 0) + (readingsSmartSwitch.price || 0);
+        setTotalPrice(totalPrice);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+
+    fetchData();
   }, []);
 
   return (
@@ -53,13 +75,18 @@ const Monitoring = () => {
             <PowerEnergyChart />
           </View>
         </View>
-        <View className="flex-row justify-evenly p-4">
-          <DataDisplay Title="Smart Socket" title="Voltage" unit="V" deviceId="Smart Socket" otherStyles="" />
-          <DataDisplay Title="Smart Socket" title="Current" unit="A" deviceId="Smart Socket" otherStyles="" />
-        </View>
-        <View className="flex-row justify-evenly p-4">
-          <DataDisplay Title="Smart Switch" title="Voltage" unit="V" deviceId="Smart Switch" otherStyles="" />
-          <DataDisplay Title="Smart Switch" title="Current" unit="A" deviceId="Smart Switch" otherStyles="" />
+        <View className="justify-between">
+          <View className="flex-row justify-evenly p-4">
+            <DataDisplay Title="Smart Socket" title="Voltage" unit="V" deviceId="Smart Socket" otherStyles="" />
+            <DataDisplay Title="Smart Socket" title="Current" unit="A" deviceId="Smart Socket" otherStyles="" />
+          </View>
+          <View className="flex-row justify-evenly p-4">
+            <DataDisplay Title="Smart Switch" title="Voltage" unit="V" deviceId="Smart Switch" otherStyles="" />
+            <DataDisplay Title="Smart Switch" title="Current" unit="A" deviceId="Smart Switch" otherStyles="" />
+          </View>
+          <View className="justify-center items-center p-4">
+            <Text className="text-white text-2xl font-bold">Bill: GH₵ {totalPrice.toFixed(2)}</Text>
+          </View>
         </View>
       </ScrollView>
     </SafeAreaView>
