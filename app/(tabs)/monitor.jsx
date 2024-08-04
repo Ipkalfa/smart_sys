@@ -5,7 +5,7 @@ import { images } from "../../constants";
 import DataDisplay from "../../components/DataDisplays";
 import { useGlobalContext } from "../../context/GlobalProvider";
 import PowerEnergyChart from "../../components/graph";
-import { getTotalPrice } from "../../lib/appwrite"; // Ensure correct path to your api file
+import { appwConfig, client, getTotalPrice } from "../../lib/appwrite"; // Ensure correct path to your api file
 
 const Monitoring = () => {
   const { user } = useGlobalContext();
@@ -44,6 +44,24 @@ const Monitoring = () => {
     };
 
     fetchData();
+
+    const unsubscribe = client.subscribe(
+      `databases.${appwConfig.databaseId}.collections.${appwConfig.measurementId}.documents`,
+      (response) => {
+        // console.log(response);
+
+        if (response.events.includes("databases.*.collections.*.documents.*.create")) {
+          fetchData();
+          // console.log("New Event Created");
+          // console.log(response.payload);
+          // we can call  the fetch data function
+        }
+      }
+    );
+
+    return () => {
+      unsubscribe();
+    };
   }, []);
 
   return (

@@ -26,8 +26,7 @@ const PowerEnergyGraph = () => {
               strokeWidth: 2, // Energy line width for Smart Switch
             },
           ],
-          legend: ["Socket Energy (Wh)", "Switch Energy (Wh)"] // Labels for the datasets
-
+          legend: ["Socket Energy (kWh)", "Switch Energy (kWh)"], // Labels for the datasets
         });
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -50,7 +49,6 @@ const PowerEnergyGraph = () => {
           // console.log("New Event Created");
           // console.log(response.payload);
           // we can call  the fetch data function
-
         }
       }
     );
@@ -78,6 +76,7 @@ const PowerEnergyGraph = () => {
   return (
     <SafeAreaView>
       <View className="justify-center">
+        {/* <Text className="text-white">{JSON.stringify({ data })}</Text> */}
         <LineChart
           data={data}
           width={Dimensions.get("window").width} // Width of the chart
