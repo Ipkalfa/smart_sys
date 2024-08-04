@@ -102,6 +102,7 @@ const PowerEnergyGraph = () => {
             marginVertical: 8,
             borderRadius: 16,
           }}
+          fromZero={true}
         />
       </View>
     </SafeAreaView>
