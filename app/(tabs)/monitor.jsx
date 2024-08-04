@@ -69,7 +69,7 @@ const Monitoring = () => {
           />
         }
       >
-        <View className="justify-center px-2">
+        <View className="justify-center">
           <View className="justify-center items-center">
             <Text className="text-white text-4xl font-bold">Monitoring</Text>
             <PowerEnergyChart />

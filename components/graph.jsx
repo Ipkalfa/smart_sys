@@ -26,7 +26,7 @@ const PowerEnergyGraph = () => {
               strokeWidth: 2 // Energy line width for Smart Switch
             }
           ],
-          legend: ["Socket Energy (kWh)", "Switch Energy (kWh)"] // Labels for the datasets
+          legend: ["Socket Energy (Wh)", "Switch Energy (Wh)"] // Labels for the datasets
         });
       } catch (error) {
         console.error('Error fetching data:', error);
