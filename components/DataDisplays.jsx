@@ -1,7 +1,6 @@
-import { View, Text, ActivityIndicator } from 'react-native';
-import React, { useState, useEffect } from 'react';
-import { getLatestReadings } from '../lib/appwrite'; // Adjust the import path as needed
-
+import { View, Text, ActivityIndicator } from "react-native";
+import React, { useState, useEffect } from "react";
+import { appwConfig, client, getLatestReadings } from "../lib/appwrite"; // Adjust the import path as needed
 const DataDisplay = ({ title, Title, unit, deviceId, otherStyles }) => {
   const [value, setValue] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -13,7 +12,7 @@ const DataDisplay = ({ title, Title, unit, deviceId, otherStyles }) => {
         const data = await getLatestReadings(deviceId);
         setValue(data[title.toLowerCase()]); // Assume title matches key in data
       } catch (error) {
-        console.error('Error fetching data:', error);
+        console.error("Error fetching data:", error);
         setError(error.message);
       } finally {
         setLoading(false);
@@ -23,15 +22,32 @@ const DataDisplay = ({ title, Title, unit, deviceId, otherStyles }) => {
     // Fetch data initially
     fetchData();
 
+    const unsubscribe = client.subscribe(
+      `databases.${appwConfig.databaseId}.collections.${appwConfig.measurementId}.documents`,
+      (response) => {
+        // console.log(response);
+
+        if (response.events.includes("databases.*.collections.*.documents.*.create")) {
+          fetchData();
+          // console.log("New Event Created");
+          // console.log(response.payload);
+          // we can call  the fetch data function
+        }
+      }
+    );
+
     // Fetch data periodically
-    const intervalId = setInterval(fetchData, 10000); // Fetch data every 10 seconds
+    // const intervalId = setInterval(fetchData, 10000); // Fetch data every 10 seconds
 
     // Cleanup interval on component unmount
-    return () => clearInterval(intervalId);
+    return () => {
+      // clearInterval(intervalId)
+      unsubscribe();
+    };
   }, [title, deviceId]);
 
   if (loading) {
-    return <ActivityIndicator size="large" color="#f1b010"/>;
+    return <ActivityIndicator size="large" color="#f1b010" />;
   }
 
   if (error) {
