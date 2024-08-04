@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from 'react';
-import { View, Dimensions, ActivityIndicator, Text, SafeAreaView } from 'react-native';
-import { LineChart } from 'react-native-chart-kit';
-import { getLatestPowerEnergyData } from '../lib/appwrite'; // Adjust the import path as needed
+import React, { useEffect, useState } from "react";
+import { View, Dimensions, ActivityIndicator, Text, SafeAreaView } from "react-native";
+import { LineChart } from "react-native-chart-kit";
+import { appwConfig, client, getLatestPowerEnergyData } from "../lib/appwrite"; // Adjust the import path as needed
 
 const PowerEnergyGraph = () => {
   const [data, setData] = useState(null);
@@ -18,19 +18,23 @@ const PowerEnergyGraph = () => {
             {
               data: socketEnergyData,
               color: (opacity = 1) => `rgba(244, 246, 247, ${opacity})`, // Energy color for Smart Socket
-              strokeWidth: 2 // Energy line width for Smart Socket
+              strokeWidth: 2, // Energy line width for Smart Socket
             },
             {
               data: switchEnergyData,
               color: (opacity = 1) => `rgba(255, 0, 0, ${opacity})`, // Energy color for Smart Switch
-              strokeWidth: 2 // Energy line width for Smart Switch
-            }
+              strokeWidth: 2, // Energy line width for Smart Switch
+            },
           ],
+<<<<<<< HEAD
           legend: ["Socket Energy (Wh)", "Switch Energy (Wh)"] // Labels for the datasets
+=======
+          legend: ["Socket Energy (kWh)", "Switch Energy (kWh)"], // Labels for the datasets
+>>>>>>> fd628f3 (added realtime listeners to the measurement collection)
         });
       } catch (error) {
-        console.error('Error fetching data:', error);
-        setError('Error fetching data');
+        console.error("Error fetching data:", error);
+        setError("Error fetching data");
       } finally {
         setLoading(false);
       }
@@ -38,11 +42,32 @@ const PowerEnergyGraph = () => {
 
     fetchData();
 
+    // register the realtime listener
+    const unsubscribe = client.subscribe(
+      `databases.${appwConfig.databaseId}.collections.${appwConfig.measurementId}.documents`,
+      (response) => {
+        // console.log(response);
+
+        if (response.events.includes("databases.*.collections.*.documents.*.create")) {
+          fetchData();
+          // console.log("New Event Created");
+          // console.log(response.payload);
+          // we can call  the fetch data function
+
+        }
+      }
+    );
+
     // Fetch data periodically
-    const intervalId = setInterval(fetchData, 10000); // Fetch data every 10 seconds
+
+    // const intervalId = setInterval(fetchData, 10000); // Fetch data every 10 seconds
 
     // Cleanup interval on component unmount
-    return () => clearInterval(intervalId);
+    return () => {
+      // clearInterval(intervalId);
+
+      unsubscribe();
+    };
   }, []);
 
   if (loading) {
@@ -58,7 +83,7 @@ const PowerEnergyGraph = () => {
       <View className="justify-center">
         <LineChart
           data={data}
-          width={Dimensions.get('window').width} // Width of the chart
+          width={Dimensions.get("window").width} // Width of the chart
           height={280} // Height of the chart
           chartConfig={{
             backgroundColor: "#36454F",
@@ -68,18 +93,18 @@ const PowerEnergyGraph = () => {
             color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
             labelColor: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
             style: {
-              borderRadius: 16
+              borderRadius: 16,
             },
             propsForDots: {
               r: "6",
               strokeWidth: "2",
-              stroke: "#17202a"
-            }
+              stroke: "#17202a",
+            },
           }}
           bezier // Optional bezier curve for smoother lines
           style={{
             marginVertical: 8,
-            borderRadius: 16
+            borderRadius: 16,
           }}
         />
       </View>
