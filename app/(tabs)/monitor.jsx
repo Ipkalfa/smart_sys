@@ -66,7 +66,7 @@ const Monitoring = () => {
 
   return (
     <SafeAreaView className="bg-primary flex-1">
-      <View className="my-6 px-4 space-y-6">
+      <View className="my-4 mb-3 px-4 space-y-6">
         <View className="justify-between items-start flex-row mb-6">
           <View>
             <Text className="font-pmedium text-sm text-gray-100">Monitor Your Consumption,</Text>
@@ -102,9 +102,9 @@ const Monitoring = () => {
             <DataDisplay Title="Smart Switch" title="Voltage" unit="V" deviceId="Smart Switch" otherStyles="" />
             <DataDisplay Title="Smart Switch" title="Current" unit="A" deviceId="Smart Switch" otherStyles="" />
           </View>
-          <View className="justify-center items-center p-4">
+          {/* <View className="justify-center items-center p-4">
             <Text className="text-white text-2xl font-bold">Total Bill: GH₵ {totalPrice.toFixed(2)}</Text>
-          </View>
+          </View> */}
         </View>
       </ScrollView>
     </SafeAreaView>

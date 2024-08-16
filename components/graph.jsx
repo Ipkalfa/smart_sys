@@ -1,27 +1,59 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { View, Dimensions, ActivityIndicator, Text, SafeAreaView } from "react-native";
 import { LineChart } from "react-native-chart-kit";
-import { appwConfig, client, getLatestPowerEnergyData } from "../lib/appwrite"; // Adjust the import path as needed
+import { appwConfig, client, getLatestPowerEnergyData, getTotalPrice  } from "../lib/appwrite"; // Adjust the import path as needed
 
 const PowerEnergyGraph = () => {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [totalPrice, setTotalPrice] = useState(0);
+
+  const onRefresh = useCallback(async () => {
+    setRefreshing(true);
+    try {
+      const totalPriceSocket = await getTotalPrice("Smart Socket");
+      const totalPriceSwitch = await getTotalPrice("Smart Switch");
+
+      // Calculate total price
+      const totalPrice = totalPriceSocket + totalPriceSwitch;
+      setTotalPrice(totalPrice);
+    } catch (error) {
+      console.error("Error refreshing data:", error);
+    } finally {
+      setRefreshing(false);
+    }
+  }, []);
+
+  const fetchData = async () => {
+
+  };
+
+  fetchData();
+
+
+  
 
   useEffect(() => {
+    
     const fetchData = async () => {
       try {
         const { socketEnergyData, switchEnergyData, labels } = await getLatestPowerEnergyData();
+
+        // Convert energy data to kWh
+        const socketEnergyDataInKWh = socketEnergyData.map((value) => value / 1000);
+        const switchEnergyDataInKWh = switchEnergyData.map((value) => value / 1000);
+
         setData({
           labels,
           datasets: [
             {
-              data: socketEnergyData,
+              data: socketEnergyDataInKWh,
               color: (opacity = 1) => `rgba(244, 246, 247, ${opacity})`, // Energy color for Smart Socket
               strokeWidth: 2, // Energy line width for Smart Socket
             },
             {
-              data: switchEnergyData,
+              data: switchEnergyDataInKWh,
               color: (opacity = 1) => `rgba(255, 0, 0, ${opacity})`, // Energy color for Smart Switch
               strokeWidth: 2, // Energy line width for Smart Switch
             },
@@ -34,6 +66,18 @@ const PowerEnergyGraph = () => {
       } finally {
         setLoading(false);
       }
+
+      try {
+        const totalPriceSocket = await getTotalPrice("Smart Socket");
+        const totalPriceSwitch = await getTotalPrice("Smart Switch");
+  
+        // Calculate total price
+        const totalPrice = totalPriceSocket + totalPriceSwitch;
+        setTotalPrice(totalPrice);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+
     };
 
     fetchData();
@@ -80,7 +124,7 @@ const PowerEnergyGraph = () => {
         <LineChart
           data={data}
           width={Dimensions.get("window").width} // Width of the chart
-          height={280} // Height of the chart
+          height={260} // Height of the chart
           chartConfig={{
             backgroundColor: "#36454F",
             backgroundGradientFrom: "#36454F",
@@ -92,8 +136,8 @@ const PowerEnergyGraph = () => {
               borderRadius: 16,
             },
             propsForDots: {
-              r: "6",
-              strokeWidth: "2",
+              r: "3.5",
+              strokeWidth: "0.5",
               stroke: "#17202a",
             },
           }}
@@ -104,6 +148,9 @@ const PowerEnergyGraph = () => {
           }}
           fromZero={true}
         />
+        <Text style={{ fontSize: 14.5, fontWeight: 'bold', color: '#aaaaa9', marginTop: 10, textAlign:'center', fontStyle: 'italic'}}>
+          Estimated Cost=(Total Energy*Unitcost ): GH₵{totalPrice.toFixed(2)}
+        </Text>
       </View>
     </SafeAreaView>
   );
