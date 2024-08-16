@@ -7,10 +7,12 @@ import SwitchButton from "../../components/SwitchButton";
 import SocketButton from "../../components/SocketButton";
 // import UseAppwrite from '../../lib/UseAppwrite'
 // import UseAppwrite from "../../lib/useAppwrite";
+
+
 const Home = () => {
   return (
     <SafeAreaView className="bg-primary flex-1">
-      <View className="px-4 py-2 flex-row justify-between">
+      <View className="px-4 py-3 flex-row justify-between">
         <View>
           <Text className="text-gray-100 font-pmedium text-sm">Welcome to</Text>
           <Text className="text-white text-2xl font-psemibold">HomeSys</Text>
@@ -20,7 +22,7 @@ const Home = () => {
         </View>
       </View>
       <ScrollView className="min-h-[83vh]">
-        <View className=" mx-[80px] mb-[80px] mt-[20px] justify-between ">
+        <View className=" mx-[80px] mb-[90px] mt-[0px] justify-between ">
           <SocketButton
             title="Toggle Status"
             containerStyles="some-container-styles"
@@ -31,7 +33,9 @@ const Home = () => {
           <NameField title={"Smart Socket"} />
         </View>
         <View className=" mx-[80px] mb-[80px] mt-[0px] justify-between  ">
-          <SwitchButton />
+          <SwitchButton
+            containerStyles="some-container-styles"
+          />
 
           <NameField title={"Smart Switch"} />
         </View>
