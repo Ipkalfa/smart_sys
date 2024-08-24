@@ -249,9 +249,7 @@ void loop() {
     lastDbCheckMillis = currentMillis;
     if (deviceExistsInDB(deviceId)) {
       updateDeviceStatusFromDB(deviceId);
-    } else {
-      sendDataToAppwrite(deviceId, userId, deviceStatus, timestamp);
-    }
+    } 
   }
   
   // Calculate total price based on total energy
