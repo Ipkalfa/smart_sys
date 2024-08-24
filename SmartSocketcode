@@ -1,0 +1,258 @@
+#include <WiFi.h>
+#include <WiFiClientSecure.h>
+#include <HTTPClient.h>
+#include <PZEM004Tv30.h>  // Include PZEM004Tv30 library
+#include <time.h>         // Include time library for timestamp
+#include <ArduinoJson.h>  // Include ArduinoJson library for JSON parsing and serialization
+
+// Your WiFi credentials
+char ssid[] = "Wokwi-GUEST";
+char pass[] = "";
+
+// Appwrite configuration
+const char* appwriteHost = "cloud.appwrite.io";
+const char* projectID = "66ad2625001249bd442c";
+const char* collectionID = "66ad2db100146cb4e965";
+const char* databaseID = "66ad2c74001a1bc74f45";
+const char* apiKey = "c82a5f96d2690914c4524bed259b33fe68b83243289a42843f581ac53c3108e7f667c5154f5d36de6168045102d9a05b8a6cc03e5978a6584f063cfbea4d15c6d8c869a9bc3d3499f00318e086e498b6df9d40f9b8d1b7996cadfedb687645c5b359c40e027011b7df381b30d0648ac0bc31c970b9a16f53fa73314bf5c64d40";
+const char* secondCollectionID = "66ad2cb5002b7c3a820b";
+
+// PZEM TX and RX pins
+#define PZEM_TX_PIN 34
+#define PZEM_RX_PIN 35
+
+// Relay pin
+#define RELAY_PIN 23
+
+// Create an instance of the PZEM class
+PZEM004Tv30 pzem(PZEM_TX_PIN, PZEM_RX_PIN);
+
+unsigned long lastMillis = 0;
+float totalEnergy = 0.0; // Total energy in watt-hours (Wh)
+bool deviceStatus = false; // Device status: true for ON, false for OFF
+
+void setup() {
+  Serial.begin(9600);
+  WiFi.begin(ssid, pass);
+
+  // Initialize relay pin
+  pinMode(RELAY_PIN, OUTPUT);
+
+  // Initialize time
+  configTime(0, 0, "pool.ntp.org", "time.nist.gov");
+  while (!time(nullptr)) {
+    Serial.println("Waiting for time synchronization...");
+    delay(1000);
+  }
+
+  // Initialize device status
+  initializeDeviceStatus("Smart Socket");
+}
+
+void initializeDeviceStatus(const String& deviceId) {
+  if (WiFi.status() == WL_CONNECTED) {
+    HTTPClient http;
+    String url = String("https://") + appwriteHost + "/v1/databases/" + String(databaseID) + "/collections/" + String(secondCollectionID) + "/documents";
+    http.begin(url);
+    http.addHeader("Content-Type", "application/json");
+    http.addHeader("X-Appwrite-Project", projectID);
+    http.addHeader("X-Appwrite-Key", apiKey);
+
+    int httpResponseCode = http.GET();
+
+    if (httpResponseCode > 0) {
+      String response = http.getString();
+      Serial.println(httpResponseCode);
+      Serial.println(response);
+
+      // Parse JSON response
+      DynamicJsonDocument doc(1024);
+      deserializeJson(doc, response);
+      JsonArray documents = doc["documents"].as<JsonArray>();
+
+      // Check if device exists
+      for (JsonObject doc : documents) {
+        if (doc["data"]["deviceName"].as<String>() == deviceId) {
+          deviceStatus = doc["data"]["status"].as<bool>();
+          digitalWrite(RELAY_PIN, deviceStatus ? HIGH : LOW);
+          Serial.println("Device found. Status set.");
+          return;
+        }
+      }
+
+      // If device doesn't exist, handle it
+      Serial.println("Device not found in database.");
+    } else {
+      Serial.print("Error on GET: ");
+      Serial.println(httpResponseCode);
+    }
+
+    http.end();
+  } else {
+    Serial.println("Error in WiFi connection");
+  }
+}
+
+String getFormattedTime() {
+  time_t now = time(nullptr);
+  struct tm timeinfo;
+  gmtime_r(&now, &timeinfo);
+  char buffer[25];
+  strftime(buffer, sizeof(buffer), "%Y-%m-%dT%H:%M:%SZ", &timeinfo);
+  return String(buffer);
+}
+
+void sendDataToAppwrite(const String& deviceId, const String& userId, bool status, const String& timestamp) {
+  if (WiFi.status() == WL_CONNECTED) {
+    HTTPClient http;
+    String url = String("https://") + appwriteHost + "/v1/databases/" + String(databaseID) + "/collections/" + String(secondCollectionID) + "/documents";
+    http.begin(url);
+    http.addHeader("Content-Type", "application/json");
+    http.addHeader("X-Appwrite-Project", projectID);
+    http.addHeader("X-Appwrite-Key", apiKey);
+
+    String jsonPayload = "{\"documentId\": \"unique()\", \"data\": {\"deviceName\": \"" + deviceId + "\", \"userId\": \"" + userId + "\", \"status\": " + (status ? "true" : "false") + "}}";
+                        
+    int httpResponseCode = http.POST(jsonPayload);
+
+    if (httpResponseCode > 0) {
+      String response = http.getString();
+      Serial.println(httpResponseCode);
+      Serial.println(response);
+    } else {
+      Serial.print("Error on sending POST: ");
+      Serial.println(httpResponseCode);
+    }
+
+    http.end();
+  } else {
+    Serial.println("Error in WiFi connection");
+  }
+}
+
+bool fetchDeviceStatus() {
+  if (WiFi.status() == WL_CONNECTED) {
+    HTTPClient http;
+    String url = String("https://") + appwriteHost + "/v1/databases/" + String(databaseID) + "/collections/" + String(secondCollectionID) + "/documents";
+    http.begin(url);
+    http.addHeader("Content-Type", "application/json");
+    http.addHeader("X-Appwrite-Project", projectID);
+    http.addHeader("X-Appwrite-Key", apiKey);
+
+    int httpResponseCode = http.GET();
+
+    if (httpResponseCode > 0) {
+      String response = http.getString();
+      Serial.println(httpResponseCode);
+      Serial.println(response);
+
+      // Parse JSON response
+      DynamicJsonDocument doc(1024);
+      deserializeJson(doc, response);
+      JsonArray documents = doc["documents"].as<JsonArray>();
+
+      for (JsonObject doc : documents) {
+        if (doc["data"]["deviceName"].as<String>() == "Smart Socket") {
+          return doc["data"]["status"].as<bool>();
+        }
+      }
+      return false; // Default to OFF if not found
+    } else {
+      Serial.print("Error on GET: ");
+      Serial.println(httpResponseCode);
+      return false; // Default to OFF in case of error
+    }
+
+    http.end();
+  } else {
+    Serial.println("Error in WiFi connection");
+    return false; // Default to OFF in case of error
+  }
+}
+
+void updateDeviceStatus(bool status) {
+  String deviceId = "Smart Socket";
+  String timestamp = getFormattedTime();
+  String userId = "66adeb3e002833994b6b"; // Hardcoded for now
+  sendDataToAppwrite(deviceId, userId, status, timestamp);
+}
+
+void loop() {
+  // Read PZEM values
+  float voltage = pzem.voltage();
+  float current = pzem.current();
+  float power = pzem.power();
+  float energy = pzem.energy();
+
+  // Update total energy
+  unsigned long currentMillis = millis();
+  float deltaTime = (currentMillis - lastMillis) / 1000.0 / 3600.0; // Time in hours since last measurement
+  lastMillis = currentMillis;
+  totalEnergy += power * deltaTime; // Increment total energy by power * time interval in hours
+
+  // Fetch device status from Appwrite
+  bool newDeviceStatus = fetchDeviceStatus();
+  if (newDeviceStatus != deviceStatus) {
+    deviceStatus = newDeviceStatus;
+    digitalWrite(RELAY_PIN, deviceStatus ? HIGH : LOW);
+    updateDeviceStatus(deviceStatus);
+  }
+
+  // Check if the device is off externally
+  if (current == 0 && deviceStatus) {
+    deviceStatus = false;
+    digitalWrite(RELAY_PIN, LOW);
+    updateDeviceStatus(deviceStatus);
+  }
+
+  // Calculate total price based on total energy
+  float pricePerKWh = 1.753;
+  float totalPrice = totalEnergy * pricePerKWh;
+
+  // Send data to Appwrite (first collection)
+  if (WiFi.status() == WL_CONNECTED) {
+    HTTPClient http;
+    String url = String("https://") + appwriteHost + "/v1/databases/" + String(databaseID) + "/collections/" + String(collectionID) + "/documents";
+    http.begin(url);
+    http.addHeader("Content-Type", "application/json");
+    http.addHeader("X-Appwrite-Project", projectID);
+    http.addHeader("X-Appwrite-Key", apiKey);
+
+    String jsonPayload = "{\"documentId\": \"unique()\", \"data\": {\"deviceName\": \"Smart Socket\", \"voltage\": " + String(voltage) + 
+                        ", \"current\": " + String(current) + 
+                        ", \"power\": " + String(power) + 
+                        ", \"price\": " + String(totalPrice) + 
+                        ", \"energy\": " + String(totalEnergy) + 
+                        "}}";
+                        
+    int httpResponseCode = http.POST(jsonPayload);
+
+    if (httpResponseCode > 0) {
+      String response = http.getString();
+      Serial.println(httpResponseCode);
+      Serial.println(response);
+    } else {
+      Serial.print("Error on sending POST: ");
+      Serial.println(httpResponseCode);
+    }
+
+    http.end();
+  } else {
+    Serial.println("Error in WiFi connection");
+  }
+
+  Serial.print("Voltage: ");
+  Serial.print(voltage);
+  Serial.print(" A, Current: ");
+  Serial.print(current);
+  Serial.print(" Wh, Power: ");
+  Serial.print(power);
+  Serial.print(" W, Energy: ");
+  Serial.print(totalEnergy);
+  Serial.print(" GHS , Price: ");
+  Serial.print(totalPrice);
+  Serial.print("  Status: ");
+  Serial.println(deviceStatus ? "ON" : "OFF");
+
+  delay(500); // Wait half a second before taking another reading
+}
